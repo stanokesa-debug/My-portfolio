@@ -1,1729 +1,398 @@
-<html lang="en"><head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                            <link rel="icon" type="image/svg+xml" sizes="any" href="assets/icons/linux.svg">
-                            <link rel="shortcut icon" href="assets/icons/linux.svg">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-
-                /* ========================================
-ROOT VARIABLES
-======================================== */
-:root {
-  --font-sans: 'Inconsolata', monospace;
-  --font-mono: 'Inconsolata', monospace;
-  --color-bg: #0a0a0f;
-  --color-text: #ffffff;
-  --color-accent: #7317cf;
-  --color-card-bg: rgba(255, 255, 255, 0.05);
-  --color-badge-bg: #2563eb;
-  --spotify-green: #1db954;
-}
-
-/* ========================================
-RESET & BASE STYLES
-======================================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-sans);
-  background: var(--color-bg);
-  color: var(--color-text);
-  overflow-x: hidden;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100dvh;
-}
-
-/* ========================================
-3D CANVAS
-======================================== */
-.canvas-cont {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100dvh;
-  z-index: 1 !important;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-#canvas3d {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* ========================================
-PARTICLES BACKGROUND
-======================================== */
-#particles-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100dvh;
-  z-index: -1 !important;
-  pointer-events: none;
-}
-
-#particles-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1 !important;
-  pointer-events: none;
-}
-
-/* ========================================
-SECTIONS
-======================================== */
-.section {
-  min-height: 100vh;
-  padding: 100px 5%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  z-index: 2 !important;
-}
-
-/* ========================================
-HERO SECTION
-======================================== */
-#hero {
-  align-items: flex-start;
-  padding-top: 60px;
-}
-
-#hero .content {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  width: 100%;
-}
-
-h1 {
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 25px;
-  letter-spacing: -0.02em;
-  min-height: 3.2em;
-}
-
-.highlight {
-  color: var(--color-accent);
-}
-
-#typing-text {
-  display: inline;
-  white-space: pre-wrap;
-}
-
-.typing-cursor {
-  display: inline-block;
-  color: #ffffff;
-  margin-left: 2px;
-  animation: blink 0.7s step-end infinite;
-  vertical-align: text-bottom;
-  background: transparent;
-  width: auto;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* ========================================
-SKILLS SECTION
-======================================== */
-.skills {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  width: 100%;
-  position: relative;
-  z-index: 3 !important;
-}
-
-.profile-wrapper {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 5px;
-}
-
-.profile-pic {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid var(--color-accent);
-  background: #1a1a2e;
-  display: block;
-}
-
-.gpa-badge {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  background: var(--color-badge-bg);
-  color: white;
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.profile-name {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--color-text);
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-.profile-subtitle {
-  font-size: 1.1rem;
-  color: #888;
-  font-weight: 400;
-  margin: 0;
-  margin-bottom: 10px;
-}
-
-.resume-launcher {
-  margin-bottom: 12px;
-  position: relative;
-  z-index: 3 !important;
-}
-
-.resume-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(13, 13, 22, 0.92);
-  color: #f2f2f2;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  padding: 9px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-.resume-trigger:hover {
-  transform: translateY(-2px);
-  border-color: rgba(115, 23, 207, 0.9);
-  box-shadow: 0 8px 26px rgba(115, 23, 207, 0.28);
-}
-
-.resume-trigger[data-state="loading"] {
-  cursor: progress;
-  pointer-events: none;
-}
-
-.resume-trigger[data-state="done"] {
-  border-color: rgba(29, 185, 84, 0.8);
-  box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.2);
-}
-
-.resume-prefix {
-  color: var(--color-accent);
-  font-weight: 700;
-}
-
-.resume-command {
-  color: #f2f2f2;
-  letter-spacing: 0.2px;
-}
-
-.resume-status {
-  margin-top: 6px;
-  font-size: 0.8rem;
-  color: #9d9d9d;
-  min-height: 1.2em;
-}
-
-.footer-resume-launcher {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 14px;
-}
-
-/* ========================================
-TECH ICONS
-======================================== */
-.lang-tags {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 5px;
-  position: relative;
-  z-index: 3 !important;
-}
-
-.tech-icon {
-  width: 52px;
-  height: 52px;
-  background: var(--color-card-bg);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  z-index: 3 !important;
-}
-
-.tech-icon img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  position: relative;
-  z-index: 3 !important;
-  pointer-events: none;
-}
-
-.tech-icon:hover {
-  background: rgba(255, 255, 255, 0.12);
-  transform: translateY(-6px) scale(1.08);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.tech-icon[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  bottom: -32px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.92);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 500;
-  white-space: nowrap;
-  opacity: 0;
-  animation: fadeIn 0.25s ease forwards;
-  pointer-events: none;
-  z-index: 10;
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-/* ========================================
-MUSIC PLAYER
-======================================== */
-.music-player-container {
-  margin-top: 20px;
-  position: relative;
-  z-index: 3 !important;
-}
-
-.listening-label {
-  color: #888;
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  margin-left: 5px;
-  font-family: var(--font-sans);
-  letter-spacing: 0.5px;
-}
-
-.card {
-  position: relative;
-  width: 280px;
-  height: 140px;
-  background: #151515;
-  border-radius: 10px;
-  padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.card:hover {
-  border-color: var(--spotify-green);
-  box-shadow: 0 5px 20px rgba(29, 185, 84, 0.2);
-}
-
-.top {
-  position: relative;
-  width: 100%;
-  display: flex;
-  gap: 10px;
-}
-
-.pfp {
-  position: relative;
-  top: 5px;
-  left: 5px;
-  height: 40px;
-  width: 40px;
-  background-color: #ffffff;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.title-1 {
-  color: white;
-  font-size: 18px;
-  font-weight: normal;
-  margin-left: 5px;
-  font-family: var(--font-sans);
-}
-
-.title-2 {
-  color: lightgrey;
-  font-size: 11px;
-  font-weight: lighter;
-  margin-top: -3px;
-  margin-left: 5px;
-  font-family: var(--font-sans);
-}
-
-.time {
-  width: 90%;
-  background-color: #5e5e5e;
-  height: 6px;
-  border-radius: 3px;
-  position: absolute;
-  left: 5%;
-  bottom: 24px;
-  cursor: pointer;
-}
-
-.time:hover {
-  height: 8px;
-}
-
-.elapsed {
-  width: 0%;
-  background-color: var(--spotify-green);
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.1s linear;
-}
-
-.controls {
-  gap: 4px;
-  align-items: center;
-  color: #ffffff;
-  display: flex;
-  position: absolute;
-  bottom: 35px;
-  left: 0;
-  width: 100%;
-  justify-content: center;
-}
-
-.volume {
-  height: 100%;
-  width: 42px;
-  margin-right: 2px;
-}
-
-.air {
-  height: 100%;
-  width: 42px;
-}
-
-.controls svg {
-  cursor: pointer;
-  transition: 0.1s;
-}
-
-.controls svg:hover {
-  color: #23da63;
-}
-
-.volume {
-  opacity: 0;
-  position: relative;
-  transition: 0.2s;
-}
-
-.volume .slider {
-  height: 4px;
-  background-color: #5e5e5e;
-  width: 80%;
-  border-radius: 2px;
-  margin-left: 10%;
-}
-
-.volume .slider .green {
-  background-color: var(--spotify-green);
-  height: 100%;
-  width: 80%;
-  border-radius: 3px;
-}
-
-.volume .circle {
-  background-color: white;
-  height: 6px;
-  width: 6px;
-  border-radius: 3px;
-  position: absolute;
-  right: 20%;
-  top: -25%;
-}
-
-.volume_button:hover ~ .volume {
-  opacity: 1;
-}
-
-.timetext {
-  color: white;
-  font-size: 9px;
-  position: absolute;
-  font-family: var(--font-sans);
-}
-
-.time_now {
-  bottom: 10px;
-  left: 15px;
-}
-
-.time_full {
-  bottom: 10px;
-  right: 15px;
-}
-
-.playing {
-  display: flex;
-  position: relative;
-  justify-content: center;
-  gap: 2px;
-  width: 30px;
-  height: 20px;
-}
-
-.greenline {
-  background-color: var(--spotify-green);
-  height: 20px;
-  width: 3px;
-  position: relative;
-  transform-origin: bottom;
-  border-radius: 2px;
-}
-
-.playing.paused .greenline {
-  animation: none;
-  transform: scaleY(0.3);
-}
-
-.line-1 {
-  animation: infinite playing 1s ease-in-out;
-  animation-delay: 0.2s;
-}
-
-.line-2 {
-  animation: infinite playing 1s ease-in-out;
-  animation-delay: 0.5s;
-}
-
-.line-3 {
-  animation: infinite playing 1s ease-in-out;
-  animation-delay: 0.6s;
-}
-
-.line-4 {
-  animation: infinite playing 1s ease-in-out;
-  animation-delay: 0s;
-}
-
-.line-5 {
-  animation: infinite playing 1s ease-in-out;
-  animation-delay: 0.4s;
-}
-
-@keyframes playing {
-  0% { transform: scaleY(0.1); }
-  33% { transform: scaleY(0.6); }
-  66% { transform: scaleY(0.9); }
-  100% { transform: scaleY(0.1); }
-}
-
-.play-btn.playing {
-  color: var(--spotify-green);
-}
-
-/* ========================================
-PROJECTS SECTION - FIXED FOR MOBILE!
-======================================== */
-.projects-section {
-  align-items: flex-end !important;
-  text-align: right;
-  padding: 120px 5%;
-  position: relative;
-  z-index: 2 !important;
-  min-height: auto !important;
-  padding-bottom: 150px !important;
-}
-
-.projects-section h2 {
-  text-align: right;
-  margin-right: 8%;
-  margin-bottom: 50px;
-  font-size: 2.5rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.bounce-cards-container {
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 100%;
-  max-width: 800px;
-  height: 500px;
-  margin-right: 4%;
-  margin-left: auto;
-  padding-bottom: 50px;
-}
-
-.bounce-card {
-  position: absolute;
-  width: 260px;
-  height: 400px;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border: 4px solid #fff;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.bounce-card:hover {
-  box-shadow: 0 15px 40px rgba(115, 23, 207, 0.4);
-  z-index: 10;
-}
-
-.card-image {
-  width: 100%;
-  height: 45%;
-  overflow: hidden;
-  background: #1a1a2e;
-  position: relative;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: high-quality;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  filter: contrast(1.1) saturate(1.1) brightness(1.05);
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.bounce-card:hover .card-image img {
-  transform: scale(1.05);
-  filter: contrast(1.15) saturate(1.15) brightness(1.1);
-}
-
-.card-image::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent 50%, rgba(26, 26, 46, 0.3) 100%);
-  pointer-events: none;
-}
-
-.card-content {
-  padding: 18px;
-  height: 55%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: white;
-  text-align: left;
-}
-
-.card-content h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #fff;
-}
-
-.card-content p {
-  font-size: 0.85rem;
-  color: #aaa;
-  line-height: 1.4;
-  margin-bottom: 15px;
-}
-
-.card-links {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.btn {
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-
-.btn-primary {
-  color: var(--color-accent);
-}
-
-.btn-primary:hover {
-  color: #9b4dff;
-  text-decoration: underline;
-}
-
-.btn-github {
-  background: transparent;
-  border: none;
-  padding: 0;
-  min-width: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-github:hover {
-  transform: translateY(-2px) scale(1.1);
-}
-
-.github-icon {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  filter: none;
-  opacity: 1;
-  transition: all 0.3s ease;
-}
-
-.btn-github:hover .github-icon {
-  transform: scale(1.1);
-  filter: brightness(1.2);
-}
-
-/* ========================================
-HOBBIES SECTION
-======================================== */
-.hobbies-section {
-  align-items: flex-start !important;
-  text-align: left;
-  padding: 100px 5%;
-  position: relative;
-  z-index: 2 !important;
-  min-height: auto !important;
-  padding-bottom: 150px !important;
-}
-
-.hobbies-section h2 {
-  text-align: left;
-  margin-left: 12%;
-  margin-bottom: 15px;
-  font-size: 2.5rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.hobby-cards-container {
-  position: relative;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  max-width: 700px;
-  height: 450px;
-  margin-left: 12%;
-  margin-right: auto;
-  padding-bottom: 50px;
-}
-
-.hobby-card {
-  position: absolute;
-  width: 220px;
-  height: 300px;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border: 4px solid #fff;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.hobby-card:hover {
-  box-shadow: 0 15px 40px rgba(115, 23, 207, 0.5);
-  z-index: 10;
-}
-
-.hobby-card-image {
-  width: 100%;
-  height: 60%;
-  overflow: hidden;
-  background: #1a1a2e;
-  position: relative;
-}
-
-.hobby-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: high-quality;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  filter: contrast(1.1) saturate(1.1) brightness(1.05);
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.hobby-card:hover .hobby-card-image img {
-  transform: scale(1.05);
-  filter: contrast(1.15) saturate(1.15) brightness(1.1);
-}
-
-.hobby-card-image::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent 50%, rgba(26, 26, 46, 0.3) 100%);
-  pointer-events: none;
-}
-
-.hobby-card-content {
-  padding: 15px;
-  height: 40%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: white;
-  text-align: left;
-}
-
-.hobby-card-content h3 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 5px;
-  color: #fff;
-}
-
-.hobby-card-content p {
-  font-size: 0.8rem;
-  color: #bbb;
-  line-height: 1.4;
-}
-
-/* ========================================
-FOOTER
-======================================== */
-footer {
-  text-align: center;
-  padding: 60px 20px;
-  z-index: 2 !important;
-  position: relative;
-}
-
-.socials {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.socials a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
-  padding: 10px 20px;
-  border-radius: 10px;
-}
-
-.socials a:hover {
-  color: var(--color-accent);
-  background: rgba(115, 23, 207, 0.1);
-}
-
-/* ========================================
-MOBILE RESPONSIVE - FIXED CARDS!
-======================================== */
-@media (max-width: 1024px) {
-  .projects-section,
-  .hobbies-section {
-    align-items: center !important;
-    text-align: center;
-  }
-  
-  .projects-section h2,
-  .hobbies-section h2 {
-    text-align: center;
-    margin-right: 0;
-    margin-left: 0;
-  }
-  
-  .bounce-cards-container,
-  .hobby-cards-container {
-    justify-content: center;
-    margin-right: 0;
-    margin-left: 0;
-  }
-  
-  .bounce-card {
-    width: 240px;
-    height: 380px;
-  }
-  
-  .hobby-card {
-    width: 240px;
-    height: 340px;
-  }
-  
-  .music-player-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-@media (max-width: 768px) {
-  html,
-  body {
-    overflow-x: hidden;
-  }
-
-  .section {
-    padding: 80px 5%;
-    min-height: auto !important;
-  }
-
-  .bounce-cards-container,
-  .hobby-cards-container {
-    width: 100% !important;
-    max-width: 100%;
-    overflow: visible;
-    padding-top: 24px !important;
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-  }
-  
-  #hero {
-    padding-top: 40px;
-  }
-  
-  h1 {
-    font-size: 2.5rem;
-  }
-  
-  .skills {
-    align-items: center;
-    text-align: center;
-  }
-  
-  .profile-pic {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .profile-name {
-    font-size: 1.75rem;
-  }
-  
-  .profile-subtitle {
-    font-size: 1rem;
-  }
-  
-  .tech-icon {
-    width: 46px;
-    height: 46px;
-  }
-  
-  /* ✅ FIXED: More height for mobile cards */
-  .bounce-cards-container {
-    height: 550px !important;
-    padding-bottom: 80px !important;
-  }
-  
-  .hobby-cards-container {
-    height: 500px !important;
-    padding-bottom: 80px !important;
-  }
-  
-  .bounce-card {
-    width: 180px !important;
-    height: 260px !important;
-  }
-  
-  .hobby-card {
-    width: 200px !important;
-    height: 320px !important;
-  }
-  
-  .card-content h3,
-  .hobby-card-content h3 {
-    font-size: 1.4rem;
-  }
-  
-  .card-content p,
-  .hobby-card-content p {
-    font-size: 0.8rem;
-  }
-
-  .card-content p {
-    line-height: 1.3;
-    margin-bottom: 8px;
-    display: -webkit-box;
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-links {
-    margin-top: auto;
-    flex-shrink: 0;
-  }
-  
-  .socials {
-    gap: 15px;
-  }
-  
-  .card-links {
-    gap: 12px;
-  }
-  
-  .btn {
-    font-size: 0.85rem;
-  }
-  
-  .github-icon {
-    width: 26px;
-    height: 26px;
-  }
-  
-  .card {
-    width: 260px;
-    height: 130px;
-  }
-
-  .volume_button {
-    width: 20px;
-    height: 16px;
-  }
-
-  .volume {
-    width: 36px;
-  }
-
-  .controls {
-    bottom: 30px;
-  }
-  
-  .title-1 {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  html,
-  body {
-    overflow-x: hidden;
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
-  
-  .profile-pic {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .profile-name {
-    font-size: 1.5rem;
-  }
-  
-  .profile-subtitle {
-    font-size: 0.9rem;
-  }
-  
-  /* ✅ FIXED: Even more height for small phones */
-  .bounce-cards-container {
-    height: 600px !important;
-    padding-bottom: 100px !important;
-  }
-  
-  .hobby-cards-container {
-    height: 550px !important;
-    padding-bottom: 100px !important;
-  }
-  
-  .bounce-card {
-    width: 160px !important;
-    height: 240px !important;
-  }
-  
-  .hobby-card {
-    width: 180px !important;
-    height: 300px !important;
-  }
-  
-  .card-content,
-  .hobby-card-content {
-    padding: 15px;
-  }
-
-  .card-content p {
-    line-height: 1.25;
-    margin-bottom: 6px;
-    display: -webkit-box;
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-links {
-    margin-top: auto;
-    flex-shrink: 0;
-  }
-  
-  .lang-tags {
-    justify-content: center;
-  }
-  
-  .btn {
-    font-size: 0.8rem;
-  }
-  
-  .github-icon {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .card {
-    width: 240px;
-    height: 120px;
-  }
-
-  .volume_button {
-    width: 18px;
-    height: 14px;
-  }
-
-  .volume {
-    width: 32px;
-  }
-
-  .controls {
-    bottom: 28px;
-  }
-  
-  .title-1 {
-    font-size: 14px;
-  }
-  
-  .title-2 {
-    font-size: 10px;
-  }
-}
-
-/* ========================================
-MOBILE RESPONSIVENESS FIXES
-======================================== */
-@media (max-width: 768px) {
-  .profile-pic {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .gpa-badge {
-    padding: 3px 8px;
-    font-size: 0.65rem;
-    bottom: 2px;
-    right: 2px;
-  }
-  
-  .tech-icon {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .tech-icon img {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .profile-name {
-    font-size: 1.5rem;
-  }
-  
-  .profile-subtitle {
-    font-size: 0.9rem;
-  }
-  
-  .bounce-card {
-    width: 180px;
-    height: 260px;
-  }
-  
-  .card-content h3 {
-    font-size: 1.2rem;
-  }
-  
-  .card-content p {
-    font-size: 0.75rem;
-  }
-  
-  .hobby-card {
-    width: 180px;
-    height: 260px;
-  }
-  
-  .card {
-    width: 240px;
-    height: 120px;
-  }
-  
-  .title-1 {
-    font-size: 14px;
-  }
-  
-  .title-2 {
-    font-size: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .profile-pic {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .gpa-badge {
-    padding: 2px 6px;
-    font-size: 0.55rem;
-    bottom: 0px;
-    right: 0px;
-  }
-  
-  .tech-icon {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .tech-icon img {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .profile-name {
-    font-size: 1.3rem;
-  }
-  
-  .profile-subtitle {
-    font-size: 0.8rem;
-  }
-  
-  h1 {
-    font-size: 2rem;
-  }
-  
-  .bounce-card {
-    width: 160px;
-    height: 240px;
-  }
-  
-  .hobby-card {
-    width: 160px;
-    height: 240px;
-  }
-  
-  .card {
-    width: 220px;
-    height: 110px;
-  }
-}
-
-@media (max-width: 768px) {
-  .hobby-card-image {
-    background: #10101a;
-  }
-
-  .hobby-card-image img {
-    object-fit: contain !important;
-    transform: none !important;
-  }
-
-  .hobby-card:hover .hobby-card-image img {
-    transform: none !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .hobby-card {
-    height: 240px !important;
-    min-height: 240px !important;
-  }
-
-  .hobby-card-image {
-    height: 130px !important;
-    min-height: 130px !important;
-    max-height: 130px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-  }
-
-  .hobby-card-image img {
-    width: 100%;
-    height: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-  }
-
-  .hobby-card-content {
-    height: 110px !important;
-    min-height: 110px !important;
-  }
-}
-
-
-              </style>
-                        </head>
-                        <body style="">
-                            
-
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stanley Okesa | Building Digital Experiences</title>
-  
-  <!-- ✅ Favicon -->
-  <link rel="icon" type="image/svg+xml" sizes="any" href="assets/icons/linux.svg">
-  <link rel="shortcut icon" href="assets/icons/linux.svg">
-  
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Inconsolata Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  
-  <!-- GSAP for animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  
-  <!-- Three.js for 3D -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <title>Stanley Okesa | Portfolio</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --bg: #ffffff;
+      --bg-alt: #f3f4f6;
+      --radius: 12px;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+      background: var(--bg);
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    section { padding: 5rem 1.5rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1, h2, h3 { line-height: 1.2; }
+    .section-title { text-align: center; font-size: 2rem; margin-bottom: 0.5rem; }
+    .section-sub { text-align: center; color: var(--muted); margin-bottom: 3rem; }
 
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    .btn-outline { border-color: var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: #fff; }
 
-  <!-- 3D Canvas -->
-  <div class="canvas-cont">
-    <canvas id="canvas3d" width="1075" height="952" style="width: 717px; height: 635px;"></canvas>
-  </div>
+    /* ---------- Header & Navigation ---------- */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      z-index: 100;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .logo { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--primary); }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
 
-  <!-- Particles Background -->
-  <div id="particles-container">
-    <canvas id="particles-canvas" width="717" height="635"></canvas>
-  </div>
+    /* ---------- Hero ---------- */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-top: 6rem;
+      background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    }
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-content h1 {
+      font-size: 4rem;
+      font-family: serif;
+      margin-bottom: 1rem;
+    }
+    .hero-content .name-highlight {
+      display: block;
+      font-size: 5rem;
+      color: var(--primary);
+      position: relative;
+      display: inline-block;
+    }
+    .hero-content .role-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+      display: block;
+    }
+    .hero-content .intro-text {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-  <button id="recruiter-toggle" class="recruiter-toggle" type="button" aria-pressed="false" style="display: none;">Recruiter Mode: Off</button>
+    /* ---------- About ---------- */
+    #about { background: var(--bg); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .about-text h2 {
+      font-family: serif;
+      font-style: italic;
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      text-align: justify;
+    }
+    .about-image img {
+      border-radius: var(--radius);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      width: 100%;
+      height: auto;
+    }
+    .skills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    .skill {
+      background: var(--bg-alt);
+      border: 1px solid #e5e7eb;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
 
-  <div id="command-palette-overlay" class="command-palette-overlay" hidden="">
-    <div class="command-palette" role="dialog" aria-modal="true" aria-label="Command palette">
-      <input id="command-input" class="command-input" type="text" placeholder="Type a command..." autocomplete="off">
-      <ul id="command-list" class="command-list"></ul>
-      <p class="command-hint">Ctrl/Cmd + K to open • ↑ ↓ to navigate • Enter to run • Esc to close</p>
-    </div>
-  </div>
+    /* ---------- Projects ---------- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,0.12); }
+    .card img { width: 100%; height: 200px; object-fit: cover; }
+    .card-body { padding: 1.5rem; }
+    .card-body h3 { margin-bottom: 0.5rem; }
+    .card-body p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1rem; }
+    .card-body .btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
 
-  <!-- SECTION 1: Hero + Skills -->
-  <section id="hero" class="section">
-    <div class="content">
-      <!-- Typing Text Effect -->
-      <h1>
-        <span id="typing-text">Hi, I'm <span class="highlight">Stanley</span>
-Full Stack Developer</span><span class="typing-cursor">_</span>
-      </h1>
-      <div class="skills">
-        <div class="profile-wrapper">
-          <img src="assets/your-photo.jpg" alt="My Photo" class="profile-pic">
-          <div class="gpa-badge">3.9 GPA</div>
+    /* ---------- Testimonials ---------- */
+    #testimonials { background: var(--bg-alt); }
+    .testimonial {
+      background: #fff;
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    }
+    .testimonial p { font-style: italic; margin-bottom: 1.25rem; color: var(--muted); }
+    .author { display: flex; align-items: center; gap: 0.75rem; }
+    .author img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+    .author strong { display: block; }
+    .author small { color: var(--muted); }
+
+    /* ---------- Contact ---------- */
+    .contact-box { text-align: center; }
+    .contact-box p { color: var(--muted); margin-bottom: 2rem; }
+
+    /* ---------- Footer ---------- */
+    footer {
+      background: #111827;
+      color: #d1d5db;
+      padding: 3rem 1.5rem 1.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto 2rem;
+    }
+    footer h4 { color: #fff; margin-bottom: 0.75rem; }
+    footer ul { list-style: none; }
+    footer li { margin-bottom: 0.5rem; }
+    footer a:hover { color: #fff; }
+    .socials { display: flex; gap: 1rem; margin-top: 1rem; }
+    .socials a {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: #1f2937;
+      transition: background 0.2s;
+    }
+    .socials a:hover { background: var(--primary); }
+    .copyright {
+      text-align: center;
+      border-top: 1px solid #1f2937;
+      padding-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .nav-links {
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        background: #fff;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+      .nav-links.open { max-height: 300px; }
+      .nav-links li { padding: 1rem 0; width: 100%; text-align: center; }
+      .about-grid, .footer-grid { grid-template-columns: 1fr; text-align: center; }
+      .about-text h2 { font-size: 2rem; }
+      .about-text p { text-align: center; }
+      .skills { justify-content: center; }
+      .hero-content h1 { font-size: 2.5rem; }
+      .hero-content .name-highlight { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER & NAVIGATION -->
+  <header>
+    <nav class="nav">
+      <a href="#hero" class="logo">SO.</a>
+      <button class="menu-toggle" aria-label="Toggle menu" id="menuToggle">&#9776;</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="hero">
+      <div class="hero-content">
+        <h1>Hello, I am <span class="name-highlight">Stanley!</span></h1>
+        <span class="role-text">Aspiring IT Professional | Web Developer | Software Enthusiast</span>
+        <p class="intro-text">I build creative digital solutions, explore new technologies, and transform ideas into functional applications. Welcome to my portfolio, where I showcase my skills, projects, and journey in technology.</p>
+        <div class="hero-buttons">
+          <a href="#projects" class="btn btn-primary">View My Work</a>
+          <a href="#contact" class="btn btn-outline">Contact Me</a>
         </div>
-        
-        <h2 class="profile-name">Stanley Okesa</h2>
-        <p class="profile-subtitle">Software Engineering Student, AIU.</p>
+      </div>
+    </section>
 
-        <!-- Tech Icons Grid -->
-        <div class="lang-tags">
-          <div class="tech-icon" title="JavaScript" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-            <img src="assets/icons/javascript.svg" alt="JavaScript">
-          </div>
-          <div class="tech-icon" title="Python" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-            <img src="assets/icons/python.svg" alt="Python">
-          </div>
-          <div class="tech-icon" title="React" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-            <img src="assets/icons/react.svg" alt="React">
-          </div>
-          <div class="tech-icon" title="Node.js" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-            <img src="assets/icons/nodejs.svg" alt="Node.js">
-          </div>
-          <div class="tech-icon" title="Firebase" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-            <img src="assets/icons/firebase.svg" alt="Firebase">
-          </div>
-          <div class="tech-icon" title="C++" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-            <img src="assets/icons/cplusplus.svg" alt="C++">
-          </div>
-          <div class="tech-icon" title="Bash" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-            <img src="assets/icons/bash.svg" alt="Bash">
-          </div>
-          <div class="tech-icon" title="Linux" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-            <img src="assets/icons/linux.svg" alt="Linux">
-          </div>
-        </div>
-
-        <!-- 🎵 Music Player -->
-        <div class="music-player-container">
-          <p class="listening-label">🎵 Listening to</p>
-          
-          <div class="card">
-            <div class="top">
-              <div class="pfp">
-                <div class="playing paused" id="playing-animation">
-                  <div class="greenline line-1"></div>
-                  <div class="greenline line-2"></div>
-                  <div class="greenline line-3"></div>
-                  <div class="greenline line-4"></div>
-                  <div class="greenline line-5"></div>
-                </div>
-              </div>
-              <div class="texts">
-                <p class="title-1" id="song-title">Beethoven</p>
-                <p class="title-2" id="artist-name">Für Elise</p>
-              </div>
+    <!-- ABOUT SECTION -->
+    <section id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2>About Stanley Okesa</h2>
+            <p>I am a passionate and dedicated Information Technology student with a strong interest in software development, web design, and emerging technologies. I enjoy solving problems through technology and developing creative, practical solutions that address real-world challenges.</p>
+            <p>I have experience working with programming languages, web development technologies, database management, and software development. Through academic projects and personal practice, I continue to improve my technical skills, explore new technologies, and build applications that demonstrate my abilities.</p>
+            <p>This portfolio showcases my skills, projects, educational background, and achievements as I continue growing into a skilled IT professional. I am always eager to learn, collaborate, and take on new challenges in the technology field.</p>
+            <div class="skills">
+              <span class="skill">IT Professional</span>
+              <span class="skill">Web Development</span>
+              <span class="skill">Software Engineering</span>
+              <span class="skill">Problem Solving</span>
+              <span class="skill">Database Management</span>
             </div>
+          </div>
+          <div class="about-image">
+            <!-- IMAGE UPDATED HERE -->
+            <img src="stanley.png" alt="Stanley Okesa Professional Portrait">
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <div class="controls">
-              <svg class="volume_button" id="volume-btn" width="24" height="20" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M11.26 3.691A1.2 1.2 0 0 1 12 4.8v14.4a1.199 1.199 0 0 1-2.048.848L5.503 15.6H2.4a1.2 1.2 0 0 1-1.2-1.2V9.6a1.2 1.2 0 0 1 1.2-1.2h3.103l4.449-4.448a1.2 1.2 0 0 1 1.308-.26Zm6.328-.176a1.2 1.2 0 0 1 1.697 0A11.967 11.967 0 0 1 22.8 12a11.966 11.966 0 0 1-3.515 8.485 1.2 1.2 0 0 1-1.697-1.697A9.563 9.563 0 0 0 20.4 12a9.565 9.565 0 0 0-2.812-6.788 1.2 1.2 0 0 1 0-1.697Zm-3.394 3.393a1.2 1.2 0 0 1 1.698 0A7.178 7.178 0 0 1 18 12a7.18 7.18 0 0 1-2.108 5.092 1.2 1.2 0 1 1-1.698-1.698A4.782 4.782 0 0 0 15.6 12a4.78 4.78 0 0 0-1.406-3.394 1.2 1.2 0 0 1 0-1.698Z" clip-rule="evenodd"></path>
-              </svg>
-              
-              <div class="volume">
-                <div class="slider">
-                  <div class="green" id="volume-level"></div>
-                </div>
-                <div class="circle" id="volume-circle"></div>
-              </div>
-              
-              <svg class="prev-btn" id="prev-btn" width="18px" height="18px" viewBox="0 0 24 24" fill="none">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.1094 4.20444C4.78029 3.31836 3 4.27115 3 5.86854V18.1315C3 19.7289 4.78029 20.6817 6.1094 19.7956L15.3066 13.6641C16.4941 12.8725 16.4941 11.1276 15.3066 10.3359L6.1094 4.20444ZM5 5.86854L14.1972 12L5 18.1315V5.86854Z" fill="currentColor"></path>
-                <path d="M21 5C21 4.44772 20.5523 4 20 4C19.4477 4 19 4.44772 19 5V19C19 19.5523 19.4477 20 20 20C20.5523 20 21 19.5523 21 19V5Z" fill="currentColor"></path>
-              </svg>
-              
-              <svg class="play-btn" id="play-btn" width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M21.6 12a9.6 9.6 0 1 1-19.2 0 9.6 9.6 0 0 1 19.2 0ZM8.4 9.6a1.2 1.2 0 1 1 2.4 0v4.8a1.2 1.2 0 1 1-2.4 0V9.6Zm6-1.2a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 1 0 2.4 0V9.6a1.2 1.2 0 0 0-1.2-1.2Z" clip-rule="evenodd"></path></svg>
-              
-              <svg class="next-btn" id="next-btn" width="18px" height="18px" viewBox="0 0 24 24" fill="none">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M17.8906 4.20444C19.2197 3.31836 21 4.27115 21 5.86854V18.1315C21 19.7289 19.2197 20.6817 17.8906 19.7956L8.69337 13.6641C7.50591 12.8725 7.50591 11.1276 8.69337 10.3359L17.8906 4.20444ZM19 5.86854L9.80277 12L19 18.1315V5.86854Z" fill="currentColor"></path>
-                <path d="M5 5C5 4.44772 4.55228 4 4 4C3.44772 4 3 4.44772 3 5V19C3 19.5523 3.44772 20 4 20C4.55228 20 5 19.5523 5 19V5Z" fill="currentColor"></path>
-              </svg>
-              
-              <div class="air"></div>
-              
-              <svg width="24" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M3.343 7.778a4.5 4.5 0 0 1 7.339-1.46L12 7.636l1.318-1.318a4.5 4.5 0 1 1 6.364 6.364L12 20.364l-7.682-7.682a4.501 4.501 0 0 1-.975-4.904Z"></path>
-              </svg>
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="container">
+        <h2 class="section-title">Selected Projects</h2>
+        <p class="section-sub">A few recent pieces of work</p>
+        <div class="grid">
+          <article class="card">
+            <img src="https://placehold.co/600x400/c7d2fe/312e81?text=Project+1" alt="Project screenshot">
+            <div class="card-body">
+              <h3>Web Application</h3>
+              <p>A functional digital solution developed to solve a real-world problem.</p>
+              <a href="#" class="btn btn-primary">View Case Study</a>
             </div>
-            
-            <div class="time">
-              <div class="elapsed" id="progress-bar" style="width: 63.7752%;"></div>
+          </article>
+          <article class="card">
+            <img src="https://placehold.co/600x400/bfdbfe/1e3a8a?text=Project+2" alt="Project screenshot">
+            <div class="card-body">
+              <h3>Software Tool</h3>
+              <p>A custom software tool focused on efficiency and user experience.</p>
+              <a href="#" class="btn btn-primary">View Case Study</a>
             </div>
-            
-            <p class="timetext time_now" id="current-time">1:50</p>
-            <p class="timetext time_full" id="total-time">2:53</p>
-          </div>
-          
-          <audio id="audio-player" src="assets/music.mp3"></audio>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 2: Projects -->
-  <section id="projects" class="section projects-section">
-    <h2>Projects</h2>
-    
-    <div class="bounce-cards-container" id="bounceCards">
-      
-      <!-- Card 1: Archive -->
-      <div class="bounce-card card-0 synced-active" data-index="0" data-project="archive" style="transform: translate(-118.177px, -20.8378px) rotate(10.0001deg); scale: none; z-index: 3; translate: none; rotate: none;">
-        <div class="card-image">
-          <img src="assets/project1.jpg" alt="Archive Project">
-        </div>
-        <div class="card-content">
-          <h3>Archive</h3>
-          <p>Community-powered library of books and past exams for students.</p>
-          <div class="card-links">
-            <a href="https://aiu-archive.web.app" target="_blank" class="btn btn-primary">Visit</a>
-            <a href="https://github.com/squidward404" target="_blank" class="btn btn-github" title="GitHub">
-              <img src="assets/Github.svg" alt="GitHub" class="github-icon">
-            </a>
-          </div>
+          </article>
+          <article class="card">
+            <img src="https://placehold.co/600x400/a7f3d0/065f46?text=Project+3" alt="Project screenshot">
+            <div class="card-body">
+              <h3>UI/UX Design</h3>
+              <p>Modern interface design focused on usability and clean aesthetics.</p>
+              <a href="#" class="btn btn-primary">View Case Study</a>
+            </div>
+          </article>
         </div>
       </div>
-      
-      <!-- Card 2: AIU-SOCIAL -->
-      <div class="bounce-card card-1" data-index="1" data-project="aiu-social" style="transform: translate(0px, 0px); scale: none; z-index: 2; translate: none; rotate: none;">
-        <div class="card-image">
-          <img src="assets/project2.jpg" alt="AIU-SOCIAL Project">
-        </div>
-        <div class="card-content">
-          <h3>AIU-SOCIAL</h3>
-          <p>An in-campus social media website(Version 2 is under development).</p>
-          <div class="card-links">
-            <a href="https://aiu-social.web.app" target="_blank" class="btn btn-primary">Visit</a>
-            <a href="https://github.com/squidward404" target="_blank" class="btn btn-github" title="GitHub">
-              <img src="assets/Github.svg" alt="GitHub" class="github-icon">
-            </a>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials">
+      <div class="container">
+        <h2 class="section-title">What Clients Say</h2>
+        <p class="section-sub">Feedback from collaborators</p>
+        <div class="grid">
+          <div class="testimonial">
+            <p>"Stanley's ability to transform complex ideas into functional applications is impressive. He is a dedicated professional."</p>
+            <div class="author">
+              <img src="https://placehold.co/96x96/9ca3af/white?text=A" alt="Client">
+              <div><strong>Alex Morgan</strong><small>Project Lead</small></div>
+            </div>
+          </div>
+          <div class="testimonial">
+            <p>"Highly motivated and skilled. Stanley brings a creative approach to every technical challenge he faces."</p>
+            <div class="author">
+              <img src="https://placehold.co/96x96/9ca3af/white?text=S" alt="Client">
+              <div><strong>Sam Lee</strong><small>Tech Manager</small></div>
+            </div>
+          </div>
+          <div class="testimonial">
+            <p>"A true enthusiast for technology. His growth as a developer is evident in the quality of his work."</p>
+            <div class="author">
+              <img src="https://placehold.co/96x96/9ca3af/white?text=R" alt="Client">
+              <div><strong>Riley Chen</strong><small>Senior Developer</small></div>
+            </div>
           </div>
         </div>
       </div>
-      
-      <!-- Card 3: WIFI-Crasher -->
-      <div class="bounce-card card-2" data-index="2" data-project="wifi-crasher" style="transform: translate(99.0268px, -13.9173px) rotate(-7.9998deg); scale: none; z-index: 1; translate: none; rotate: none;">
-        <div class="card-image">
-          <img src="assets/project3.jpg" alt="WIFI-Crasher Project">
+    </section>
+
+       <!-- CONTACT -->
+    <section id="contact">
+      <div class="container contact-box">
+        <h2 class="section-title">Let's Work Together</h2>
+        <p class="section-sub">Have a project, opportunity, or question? Reach out directly.</p>
+
+        <div class="hero-buttons">
+          <a href="mailto:stanokesa@gmail.com" class="btn btn-primary">
+            Email Me: stanokesa@gmail.com
+          </a>
+          <a href="https://wa.me/254769251524" target="_blank" rel="noopener noreferrer"
+             class="btn btn-primary" style="background:#25D366;">
+            Chat on WhatsApp: 0769251524
+          </a>
         </div>
-        <div class="card-content">
-          <h3>WIFI-Crasher</h3>
-          <p>WiFi security testing suite written in Python. Built for ethical hacking learning.</p>
-          <div class="card-links">
-            <a href="https://github.com/squidward404/wifi-crasher" target="_blank" class="btn btn-primary">Visit</a>
-            <a href="https://github.com/squidward404" target="_blank" class="btn btn-github" title="GitHub">
-              <img src="assets/Github.svg" alt="GitHub" class="github-icon">
-            </a>
-          </div>
-        </div>
+
+        <p style="margin-top:2rem;">
+          <strong>Email:</strong> stanokesa@gmail.com<br>
+          <strong>WhatsApp:</strong> 0769251524
+        </p>
       </div>
-      
-    </div>
-  </section>
+    </section>
 
-  <!-- SECTION 3: Project Timeline -->
-  <section id="timeline" class="section timeline-section">
-    <h2>Build Timeline</h2>
+  </main>
 
-    <div class="timeline-tabs" id="timelineTabs">
-      <button class="timeline-tab active" data-project="archive" type="button">Archive</button>
-      <button class="timeline-tab" data-project="aiu-social" type="button">AIU-SOCIAL</button>
-      <button class="timeline-tab" data-project="wifi-crasher" type="button">WIFI-Crasher</button>
-    </div>
+</body>
+</html>
 
-    <article class="project-impact" id="projectImpact">
-      <h3 id="impact-title">Archive Impact Snapshot</h3>
-      <p id="impact-summary">A resource hub helping students quickly find books and past exams.</p>
-      <div class="impact-grid">
-        <span class="impact-chip" id="impact-metric-1">Fast search experience</span>
-        <span class="impact-chip" id="impact-metric-2">Community submissions</span>
-        <span class="impact-chip" id="impact-metric-3">Accessible from any device</span>
-      </div>
-      <div class="impact-next">
-        <h4>What I’d Build Next</h4>
-        <ul>
-          <li id="impact-next-1">Add smarter resource filtering by semester and course.</li>
-          <li id="impact-next-2">Introduce trusted uploader reputation and moderation tools.</li>
-          <li id="impact-next-3">Improve analytics for most useful resources.</li>
-        </ul>
-      </div>
-    </article>
-
-    <div class="timeline-track" id="timelineTrack">
-      <article class="timeline-item" data-project="archive">
-        <span class="timeline-dot"></span>
-        <div class="timeline-content">
-          <h3>Archive — MVP Launch</h3>
-          <p>Designed the base UI and released core upload/search flow for books and past exams.</p>
-        </div>
-      </article>
-
-      <article class="timeline-item" data-project="archive">
-        <span class="timeline-dot"></span>
-        <div class="timeline-content">
-          <h3>Archive — Community Contributions</h3>
-          <p>Added contribution paths so students can submit and discover useful academic resources.</p>
-        </div>
-      </article>
-
-      <article class="timeline-item" data-project="aiu-social" hidden="">
-        <span class="timeline-dot"></span>
-        <div class="timeline-content">
-          <h3>AIU-SOCIAL — Initial Version</h3>
-          <p>Built the first on-campus social feed and profile interactions for students.</p>
-        </div>
-      </article>
-
-      <article class="timeline-item" data-project="aiu-social" hidden="">
-        <span class="timeline-dot"></span>
-        <div class="timeline-content">
-          <h3>AIU-SOCIAL — Version 2 Planning</h3>
-          <p>Prepared architecture and improvements for the upcoming iteration now in development.</p>
-        </div>
-      </article>
-
-      <article class="timeline-item" data-project="wifi-crasher" hidden="">
-        <span class="timeline-dot"></span>
-        <div class="timeline-content">
-          <h3>WIFI-Crasher — Security Toolkit</h3>
-          <p>Implemented practical Python workflows to learn and demonstrate ethical testing concepts.</p>
-        </div>
-      </article>
-
-      <article class="timeline-item" data-project="wifi-crasher" hidden="">
-        <span class="timeline-dot"></span>
-        <div class="timeline-content">
-          <h3>WIFI-Crasher — Learning Focus</h3>
-          <p>Refined the project to emphasize safe experimentation and security education.</p>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- SECTION 4: Hobbies -->
-  <section id="hobbies" class="section hobbies-section">
-    <h2>Hobbies</h2>
-    
-    <div class="hobby-cards-container" id="hobbyCards">
-      
-      <!-- Hobby Card 1 -->
-      <div class="hobby-card hobby-0" data-index="0" style="transform: rotate(-8deg) translate(-80px); scale: 1; z-index: 3;">
-        <div class="hobby-card-image">
-          <img src="assets/drawing1.jpg" alt="Drawing 1">
-        </div>
-        <div class="hobby-card-content">
-          <h3>Drawing </h3>
-          <p>If I am not working, I love to draw.</p>
-        </div>
-      </div>
-      
-      <!-- Hobby Card 2 -->
-      <div class="hobby-card hobby-1" data-index="1" style="transform: rotate(-2deg) translate(-20px); scale: 1; z-index: 2;">
-        <div class="hobby-card-image">
-          <img src="assets/drawing2.jpg" alt="Drawing 2">
-        </div>
-        <div class="hobby-card-content">
-          <h3>Foot ball </h3>
-          <p>I enjoy playing football in my free time.</p>
-        </div>
-      </div>
-      
-      <!-- Hobby Card 3 -->
-      <div class="hobby-card hobby-2" data-index="2" style="transform: rotate(5deg) translate(60px); scale: 1; z-index: 1;">
-        <div class="hobby-card-image">
-          <img src="assets/drawing3.jpg" alt="Drawing 3">
-        </div>
-        <div class="hobby-card-content">
-          <h3>Hiking </h3>
-          <p>I love exploring nature and going on hiking trips.</p>
-        </div>
-      </div>
-      
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="socials">
-      <a href="https://github.com/stanokesa-debug" target="_blank" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">GitHub</a>
-      <a href="https://t.me/A_t_o_m_ic" target="_blank" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">Telegram</a>
-      <a href="stanokesa@gmail.com" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">Gmail</a>
-    </div>
-
-    <div class="resume-launcher footer-resume-launcher">
-      <button id="resume-footer-trigger" class="resume-trigger" type="button" data-state="idle" data-idle-message="Click to download my resume." aria-live="polite">
-        <span class="resume-prefix">$</span>
-        <span class="resume-command">./download_resume.sh</span>
-      </button>
-      <p id="resume-footer-status" class="resume-status">Click to download my resume.</p>
-      <a id="resume-link" href="assets/resume.pdf" download="Stanley-okesa.pdf" hidden="">Download Resume</a>
-    </div>
-  </footer>
-
-  <script src="script.js"></script>
-
-
-
-
-
-              <script>
-                              
-              </script>
-                        
-                        
-                    </body></html>
